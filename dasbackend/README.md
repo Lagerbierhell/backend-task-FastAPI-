@@ -1,14 +1,33 @@
 # backend-task-FastAPI-
------------------------------------------------------
+----------------------------------------------------------------------------------------------------------
 Python 3.11 / Poetry / FastAPI / Postgres SQL 
------------------------------------------------------
+----------------------------------------------------------------------------------------------------------
 Gehe auf die offizielle Python-Seite:
 https://www.python.org/downloads/
------------------------------------------------------
+----------------------------------------------------------------------------------------------------------
 https://www.postgresql.org/download/
------------------------------------------------------
+----------------------------------------------------------------------------------------------------------
 https://python-poetry.org/docs/basic-usage/
------------------------------------------------------
+----------------------------------------------------------------------------------------------------------
+Datenbank-Konfiguration
+
+Für die App wird eine PostgreSQL-Datenbank benötigt. FastAPI kann die Datenbank selbst nicht automatisch erstellen, daher muss sie vorab erstellt werden.
+----------------------------------------------------------------------------------------------------------
+Empfohlene Test-Datenbank (Standardwerte):
+----------------------------------------------------------------------------------------------------------
+DATABASE_URL=postgresql+asyncpg://postgres:root@localhost:5432/mydatabase
+----------------------------------------------------------------------------------------------------------
+Lege eine .env-Datei im Projektverzeichnis an und füge dort diese Zugangsdaten ein.
+----------------------------------------------------------------------------------------------------------
+SQLAlchemy kann anschließend die Tabellen automatisch anlegen, sobald die Datenbank existiert.
+----------------------------------------------------------------------------------------------------------
+HINWEIS: Für die Produktion sollten eigene Zugangsdaten verwendet und Migrationen (z. B. Alembic) genutzt werden.
+----------------------------------------------------------------------------------------------------------
+WICHTIG: Die .env-Datei SOLL NIEMALS ins Repository (immer in .gitignore eintragen).
+In Produktion sollten sichere Zugangsdaten und Migrationstools verwendet werden.
+----------------------------------------------------------------------------------------------------------
+Endpunkte:
+
 1.create_task(task: TaskCreate)
 Methode: POST
 Beschreibung: Erstellt eine neue Task in der Datenbank.
@@ -56,5 +75,10 @@ Methode: PUT / PATCH
 Beschreibung: Markiert eine Task als erledigt (done=True) anhand ihrer ID.
 Input: Task-ID
 Output: JSON der aktualisierten Task mit done=True
-
+----------------------------------------------------------------------------------------------------------
+Startet die App:
+----------------------------------------------------------------------------------------------------------
 uvicorn src.app.main:app --reload
+----------------------------------------------------------------------------------------------------------
+BONUS: Ein logger der lokal alle Logs speichert.(auf wunsch auf in Datenbank)
+----------------------------------------------------------------------------------------------------------

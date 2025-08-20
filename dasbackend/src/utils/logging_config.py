@@ -12,9 +12,8 @@ def setup_logging():
         os.makedirs('logs', exist_ok=True)
         logging.config.dictConfig(config)
     else:
-        # Basic fallback configuration
         logging.basicConfig(level=logging.INFO)
-        logging.warning(f"Logging config file not found: {config_path}. Using basic config.")
+        logging.warning(f"Login Konfiguration nicht gefunden: {config_path}. Nutze die basics.")
 
-# Call this early in your application startup
+#immer aufrufen bevor fastapi läuft im main.py ! 
 setup_logging()
