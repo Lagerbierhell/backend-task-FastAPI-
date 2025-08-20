@@ -1,10 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from typing import List
 from contextlib import asynccontextmanager
 import logging
 from src.database.database import database, sync_engine, metadata
-from src.schemas.schemas import Task, TaskCreate
-from src.crud.crud import create_task, list_tasks
+from src.schemas.schemas import Task , TaskCreate
+from src.crud.crud import  mark_task_done_bool,create_task,list_tasks, delete_task, update_task_description, list_done_tasks
+
 
 
 logging.basicConfig(
@@ -37,13 +38,41 @@ async def add_task(task: TaskCreate):
     
     return await create_task(task)
 
-@app.get("/tasks", response_model=List[TaskCreate])
+@app.get("/tasks", response_model=List[Task])
 async def get_tasks():
     return await list_tasks()
 
 
+@app.delete("/tasks/{task_id}")
+async def remove_task(task_id: int):
+    success = await delete_task(task_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return {"detail": "Task deleted successfully"}
 
 
+
+@app.put("/tasks/{task_id}/description", response_model=Task)
+async def edit_task_description(task_id: int, new_description: str):
+    task = await update_task_description(task_id, new_description)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return task
+
+
+
+@app.get("/tasks/done", response_model=List[Task])
+async def get_done_tasks():
+    return await list_done_tasks()
+
+
+
+@app.patch("/tasks/{task_id}/done", response_model=Task)
+async def mark_task_done(task_id: int): #type: ignore
+    task = await mark_task_done_bool(task_id)#type: ignore
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return task # type: ignore
 
 
 
