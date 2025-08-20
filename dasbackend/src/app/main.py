@@ -8,6 +8,7 @@ from src.crud.crud import  mark_task_done_bool,create_task,list_tasks, delete_ta
 
 
 
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"

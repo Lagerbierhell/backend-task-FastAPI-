@@ -2,14 +2,11 @@ import os
 import logging
 from src.utils.logging_config import setup_logging
 
-
 # Setup logging
 setup_logging()
 
 # Set environment
 os.environ['ENVIRONMENT'] = 'development'  # or 'production', depending on your needs
-
-
 
 # Test different log levels
 logger = logging.getLogger(__name__)
