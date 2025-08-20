@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "verbose": {
+      "format": "%(asctime)s - %(name)s - %(levelname)s - %(module)s - %(process)d - %(thread)d - %(message)s"
+    },
+    "simple": {
+      "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    }
+  },
+  "handlers": {
+    "console": {
+      "level": "DEBUG",
+      "class": "logging.StreamHandler",
+      "formatter": "simple",
+      "stream": "ext://sys.stdout"
+    },
+    "file": {
+      "level": "DEBUG",
+      "class": "logging.FileHandler",
+      "formatter": "verbose",
+      "filename": "logs/development.log",
+      "mode": "a"
+    }
+  },
+  "loggers": {
+    "": {
+      "handlers": ["console", "file"],
+      "level": "DEBUG",
+      "propagate": true
+    },
+    "uvicorn": {
+      "handlers": ["console"],
+      "level": "INFO",
+      "propagate": false
+    },
+    "uvicorn.error": {
+      "level": "DEBUG",
+      "propagate": true
+    },
+    "sqlalchemy": {
+      "handlers": ["console"],
+      "level": "WARNING",
+      "propagate": false
+    }
+  }
+}
