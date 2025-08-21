@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from typing import List
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import logging
 from src.database.database import database, sync_engine, metadata
@@ -14,6 +15,8 @@ from src.crud.crud import  (mark_task_done_bool,
 
 setup_logging()
 logger = logging.getLogger(__name__)  # Logger für dieses Modul
+
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -32,6 +35,17 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="FastAPI mit PostgreSQL", lifespan=lifespan)
+
+# --- CORS Middleware einfügen ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # erlaubt alle Domains (für Tests)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+# --- Ende CORS ---
+
 
 @app.post("/tasks", response_model=Task)
 async def add_task(task: TaskCreate):
