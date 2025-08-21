@@ -1,84 +1,124 @@
-# backend-task-FastAPI-
-----------------------------------------------------------------------------------------------------------
-Python 3.11 / Poetry / FastAPI / Postgres SQL 
-----------------------------------------------------------------------------------------------------------
-Gehe auf die offizielle Python-Seite:
+Backend Task-FastAPI
+
+Technologien: Python 3.11 / Poetry / FastAPI / PostgreSQL / Docker
+
+
+Gehe auf die offizielle Python-Seite und installiere Python 3.11:
 https://www.python.org/downloads/
-----------------------------------------------------------------------------------------------------------
+
+PostgreSQL
+
+Installiere PostgreSQL:
 https://www.postgresql.org/download/
-----------------------------------------------------------------------------------------------------------
+
+Poetry
+
+Installiere Poetry für die Abhängigkeitsverwaltung:
 https://python-poetry.org/docs/basic-usage/
-----------------------------------------------------------------------------------------------------------
-Datenbank-Konfiguration
 
-Für die App wird eine PostgreSQL-Datenbank benötigt. FastAPI kann die Datenbank selbst nicht automatisch erstellen, daher muss sie vorab erstellt werden.
-----------------------------------------------------------------------------------------------------------
-Empfohlene Test-Datenbank (Standardwerte):
-----------------------------------------------------------------------------------------------------------
-DATABASE_URL=postgresql+asyncpg://postgres:root@localhost:5432/mydatabase
-----------------------------------------------------------------------------------------------------------
-Lege eine .env-Datei im Projektverzeichnis an und füge dort diese Zugangsdaten ein.
-----------------------------------------------------------------------------------------------------------
-SQLAlchemy kann anschließend die Tabellen automatisch anlegen, sobald die Datenbank existiert.
-----------------------------------------------------------------------------------------------------------
-HINWEIS: Für die Produktion sollten eigene Zugangsdaten verwendet und Migrationen (z. B. Alembic) genutzt werden.
-----------------------------------------------------------------------------------------------------------
-WICHTIG: Die .env-Datei SOLL NIEMALS ins Repository (immer in .gitignore eintragen).
-In Produktion sollten sichere Zugangsdaten und Migrationstools verwendet werden.
-----------------------------------------------------------------------------------------------------------
-Endpunkte:
+Docker
 
-1.create_task(task: TaskCreate)
-Methode: POST
-Beschreibung: Erstellt eine neue Task in der Datenbank.
-Input: JSON mit Task-Daten (description, optional due_at)
-Output: JSON mit allen Task-Daten inklusive generierter ID, created_at und done=False
+Installiere Docker:
+https://www.docker.com/
 
-Beispiel:
-{
-  "description": "Einkaufen",
-  "due_at": "2025-08-25T12:00:00Z"
-}
-Return:
-{
-  "id": 1,
-  "description": "Einkaufen",
-  "created_at": "2025-08-20T22:00:00Z",
-  "due_at": "2025-08-25T12:00:00Z",
-  "done": false
-}
 
-2️. list_tasks()
-Methode: GET
-Beschreibung: Gibt eine Liste aller Tasks zurück, sowohl erledigte als auch offene.
-Output: Array von Task-Objekten
 
-3️. delete_task(task_id: int)
-Methode: DELETE
-Beschreibung: Löscht eine Task anhand ihrer ID.
-Input: task_id (int)
-Output: Boolean → True, wenn die Task existierte und gelöscht wurde, sonst False
+ERSTER WEG
 
-4️. update_task_description(task_id: int, new_description: str)
-Methode: PUT / PATCH
-Beschreibung: Aktualisiert die Beschreibung einer Task anhand ihrer ID.
-Input: Task-ID und neue Beschreibung
-Output: Aktualisierte Task-Daten als JSON oder None, wenn die Task nicht existiert
+1 Docker 
+    Bevor du startest, stelle sicher, dass du folgendes installierth hast:
 
-5️. list_done_tasks()
-Methode: GET
-Beschreibung: Gibt eine Liste aller erledigten Tasks zurück (done=True).
-Output: Array von Task-Objekten, die erledigt sind
+    Docker Desktop
 
-6️. mark_task_done_bool(task_id: int)
-Methode: PUT / PATCH
-Beschreibung: Markiert eine Task als erledigt (done=True) anhand ihrer ID.
-Input: Task-ID
-Output: JSON der aktualisierten Task mit done=True
-----------------------------------------------------------------------------------------------------------
-Startet die App:
-----------------------------------------------------------------------------------------------------------
-uvicorn src.app.main:app --reload
-----------------------------------------------------------------------------------------------------------
-BONUS: Ein logger der lokal alle Logs speichert.(auf wunsch auf in Datenbank)
-----------------------------------------------------------------------------------------------------------
+    Ein Terminal (Windows: PowerShell / CMD, macOS/Linux: Terminal)
+
+2 Docker-Compose starten
+    Öffne ein Terminal im Projektordner.
+
+    Führe folgenden Befehl aus:
+    "docker-compose up"
+
+    Docker lädt die benötigten Images herunter und startet die Container.
+    Die App und die Datenbank laufen dann automatisch.
+
+3 FastAPI Backend: http://localhost:4200
+
+    Swagger-Dokumentation (API-Tester): http://localhost:4200/docs
+    Hier kannst du Tasks erstellen, löschen, bearbeiten und erledigte Tasks auflisten.
+
+4 App stoppen
+
+    Im Terminal:
+    docker-compose down
+    Damit werden die Container gestoppt, die Datenbankdaten bleiben aber erhalten (im Docker-Volume).
+
+
+ZWEITER WEG
+
+5 Projekt vorbereiten
+
+    Lade das Projekt herunter oder klone es via Git:
+
+    git clone <projekt-url>
+    cd <projekt-ordner>
+
+
+    Erstelle eine virtuelle Umgebung über Poetry:
+
+    poetry install
+    poetry shell
+
+
+    Damit werden alle Python-Abhängigkeiten installiert und die virtuelle Umgebung aktiviert.
+
+
+6 Datenbank-Konfiguration (Umständlicher weg)
+    Die App benötigt eine PostgreSQL-Datenbank. FastAPI kann die Datenbank nicht automatisch erstellen – sie muss vorab existieren.
+
+    Empfohlene Test-Datenbank (Standardwerte):
+    DATABASE_URL=postgresql+asyncpg://root:root@localhost:5432/mydatabase 
+
+
+    Lege eine .env-Datei im Projektverzeichnis an und füge dort diese Zugangsdaten ein.
+    SQLAlchemy erstellt automatisch die Tabellen, sobald die Datenbank existiert.
+    
+7 FASTAPI Starten
+
+    Stelle sicher, dass die virtuelle Umgebung aktiv ist (poetry shell).
+
+    Starte die App:
+
+    uvicorn src.app.main:app
+
+    --reload sorgt dafür, dass die App bei Änderungen am Code automatisch neu startet.
+
+    Die App ist jetzt erreichbar unter:
+    http://127.0.0.1:8000
+
+    Swagger-Dokumentation für die API:
+    http://127.0.0.1:8000/docs
+
+8 Die Endpunkte
+
+    Die API-Endpunkte funktionieren wie folgt:
+
+    POST /create_task → neue Task erstellen
+
+    GET /list_tasks → alle Tasks auflisten
+
+    DELETE /delete_task/{task_id} → Task löschen
+
+    PUT /update_task_description/{task_id} → Task-Beschreibung ändern
+
+    GET /list_done_tasks → erledigte Tasks auflisten
+
+    PUT /mark_task_done/{task_id} → Task als erledigt markieren
+
+    9 Hinweise!!
+
+    Die .env-Datei darf niemals in ein Repository hochgeladen werden, das in Produktion verwendet wird.
+
+    Für Produktionsbetrieb Passwörter, Host und Port anpassen.
+
+    Migrationen: Für Änderungen an Tabellenstruktur in Produktion sollten Tools wie Alembic genutzt werden.
+
